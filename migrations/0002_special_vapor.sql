@@ -1,1 +1,0 @@
-ALTER TABLE "borrow_records" ALTER COLUMN "status" SET NOT NULL;

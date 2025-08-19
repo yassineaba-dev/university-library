@@ -1,6 +1,6 @@
 {
-  "id": "fd986936-c17d-4d90-88f7-cf8150cbeee0",
-  "prevId": "a3749a53-5a50-4d40-9b1c-f6b80115a747",
+  "id": "681497e4-d260-4940-9818-613bd5d4a3ff",
+  "prevId": "aa0068f3-e243-4c1e-9be3-bac64918c082",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -62,7 +62,7 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
-          "default": 0
+          "default": 1
         },
         "available_copies": {
           "name": "available_copies",
@@ -154,8 +154,15 @@
           "type": "borrow_status",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "'BORROWED'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -212,8 +219,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "fullname": {
-          "name": "fullname",
+        "full_name": {
+          "name": "full_name",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -304,7 +311,33 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.borrow_status": {
+      "name": "borrow_status",
+      "schema": "public",
+      "values": [
+        "BORROWED",
+        "RETURNED"
+      ]
+    },
+    "public.role": {
+      "name": "role",
+      "schema": "public",
+      "values": [
+        "USER",
+        "ADMIN"
+      ]
+    },
+    "public.status": {
+      "name": "status",
+      "schema": "public",
+      "values": [
+        "PENDING",
+        "APPROVED",
+        "REJECTED"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},

@@ -5,29 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1735823044525,
-      "tag": "0000_worthless_invaders",
+      "when": 1736335902990,
+      "tag": "0000_jittery_microchip",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1735824142407,
-      "tag": "0001_lucky_shape",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1735824235232,
-      "tag": "0002_special_vapor",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1735915636751,
-      "tag": "0003_worthless_goblin_queen",
+      "when": 1736343290422,
+      "tag": "0001_tough_lilandra",
       "breakpoints": true
     }
   ]
