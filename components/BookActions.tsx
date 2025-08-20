@@ -1,4 +1,3 @@
-// File: /components/BookActions.tsx
 "use client";
 
 import Image from "next/image";
@@ -7,33 +6,54 @@ import { useState } from "react";
 
 interface BookActionsProps {
   bookId: string;
-  onDelete: () => void;
+  onDelete?: () => void; // optional now
 }
 
 export default function BookActions({ bookId, onDelete }: BookActionsProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
-    const confirmed = confirm("Are you sure you want to delete this book? This action cannot be undone.");
+    const confirmed = confirm(
+      "Are you sure you want to delete this book? This action cannot be undone."
+    );
     if (!confirmed) return;
 
     setIsDeleting(true);
-    
+
     try {
       const res = await fetch(`/api/books/${bookId}`, {
         method: "DELETE",
+        headers: {
+          Accept: "application/json",
+        },
       });
+
+      const contentType = res.headers.get("content-type") || "";
+
+      // If server returned HTML (like an error page), read text and throw
+      if (!contentType.includes("application/json")) {
+        const text = await res.text();
+        console.error("Non-JSON response from delete API:", text);
+        throw new Error("Server returned non-JSON response. Check server logs.");
+      }
 
       const result = await res.json();
 
       if (!res.ok) {
-        alert(result.error || "Something went wrong.");
+        alert(result?.error || "Something went wrong.");
         return;
       }
 
-      // Call the onDelete function passed from parent to update UI
-      onDelete();
-      alert("Book deleted successfully!");
+      // If parent passed onDelete, call it; otherwise fallback to reload
+      if (typeof onDelete === "function") {
+        onDelete();
+      } else {
+        // fallback — simple and reliable
+        window.location.reload();
+      }
+
+      // optional UX
+      // alert("Book deleted successfully!");
     } catch (err) {
       console.error("Delete failed:", err);
       alert("Something went wrong. Please try again.");
@@ -44,19 +64,14 @@ export default function BookActions({ bookId, onDelete }: BookActionsProps) {
 
   return (
     <div className="flex items-center gap-3">
-      <Link 
-        href={`/admin/books/${bookId}/edit`} 
+      <Link
+        href={`/admin/books/${bookId}/edit`}
         className="p-1.5 rounded-md hover:bg-gray-100 transition-colors"
         title="Edit book"
       >
-        <Image
-          src="/icons/admin/edit.svg"
-          width={18}
-          height={18}
-          alt="Edit"
-        />
+        <Image src="/icons/admin/edit.svg" width={18} height={18} alt="Edit" />
       </Link>
-      <button 
+      <button
         onClick={handleDelete}
         disabled={isDeleting}
         className="p-1.5 rounded-md hover:bg-red-50 transition-colors disabled:opacity-50"
@@ -65,12 +80,7 @@ export default function BookActions({ bookId, onDelete }: BookActionsProps) {
         {isDeleting ? (
           <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
         ) : (
-          <Image
-            src="/icons/admin/trash.svg"
-            width={18}
-            height={18}
-            alt="Delete"
-          />
+          <Image src="/icons/admin/trash.svg" width={18} height={18} alt="Delete" />
         )}
       </button>
     </div>
