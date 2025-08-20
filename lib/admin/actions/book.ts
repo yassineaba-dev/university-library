@@ -16,6 +16,64 @@ import { books, borrowRecords, users } from "@/database/schema";
 
 const ITEMS_PER_PAGE = 20;
 
+// File: /lib/admin/actions/book.ts
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+export async function deleteBook(id: string) {
+  try {
+    // First check if the book exists
+    const [existingBook] = await db
+      .select()
+      .from(books)
+      .where(eq(books.id, id))
+      .limit(1);
+
+    if (!existingBook) {
+      return { 
+        success: false, 
+        error: "Book not found" 
+      };
+    }
+
+    // Check if the book has active borrow records
+    const [activeBorrowRecord] = await db
+      .select()
+      .from(borrowRecords)
+      .where(
+        eq(borrowRecords.bookId, id)
+      )
+      .limit(1);
+
+    if (activeBorrowRecord) {
+      return { 
+        success: false, 
+        error: "Cannot delete book with active borrow records" 
+      };
+    }
+
+    // Delete the book from the database
+    await db
+      .delete(books)
+      .where(eq(books.id, id));
+
+    // Revalidate the page to refresh the data
+    revalidatePath("/admin/books");
+    
+    return { 
+      success: true,
+      message: "Book deleted successfully"
+    };
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    return { 
+      success: false, 
+      error: "Failed to delete book. Please try again." 
+    };
+  }
+}
+
 export async function createBook(params: BookParams) {
   try {
     const newBook = await db
