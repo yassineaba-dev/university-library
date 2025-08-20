@@ -23,7 +23,7 @@ export default function BookActions({ bookId, onDelete }: BookActionsProps) {
     try {
      const res = await fetch("/api/books/delete", {
   method: "POST",
-  headers: { "Content-Type": "application/json", Accept: "application/json" },
+  headers: { "Content-Type": "application/json", "Accept": "application/json" },
   body: JSON.stringify({ id: bookId }),
 });
 
