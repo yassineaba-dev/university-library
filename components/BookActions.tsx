@@ -1,20 +1,28 @@
-// components/BookActions.tsx
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
-import { deleteBook } from "@/lib/admin/actions/book";
 
 export default function BookActions({ bookId }: { bookId: string }) {
   const handleDelete = async () => {
     const confirmed = confirm("Are you sure you want to delete this book?");
     if (!confirmed) return;
 
-    const result = await deleteBook(bookId);
-    if (result.success) {
+    try {
+      const res = await fetch(`/api/books/${bookId}/delete`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        alert(error.error || "Failed to delete the book.");
+        return;
+      }
+
       window.location.reload();
-    } else {
-      alert("Failed to delete the book.");
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong.");
     }
   };
 
