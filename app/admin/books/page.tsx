@@ -87,13 +87,15 @@ const Page = async ({ searchParams }: PageProps) => {
                           alt="edit"
                         />
                       </Link>
-                      <Image
+                      <button onClick={() => handleDelete(book.id)} className="relative size-5">
+   <Image
                         src="/icons/admin/trash.svg"
                         width={20}
                         height={20}
                         className="object-contain"
                         alt="delete"
                       />
+</button>
                     </div>
                   </TableCell>
                 </TableRow>
