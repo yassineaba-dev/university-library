@@ -21,12 +21,12 @@ export default function BookActions({ bookId, onDelete }: BookActionsProps) {
     setIsDeleting(true);
 
     try {
-      const res = await fetch(`/api/books/${bookId}`, {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-        },
-      });
+     const res = await fetch("/api/books/delete", {
+  method: "POST",
+  headers: { "Content-Type": "application/json", Accept: "application/json" },
+  body: JSON.stringify({ id: bookId }),
+});
+
 
       const contentType = res.headers.get("content-type") || "";
 
