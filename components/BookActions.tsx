@@ -26,18 +26,14 @@ export default function BookActions({ bookId, onDelete }: BookActionsProps) {
   headers: { "Content-Type": "application/json", "Accept": "application/json" },
   body: JSON.stringify({ id: bookId }),
 });
+      const ct = res.headers.get("content-type") || "";
+if (!ct.includes("application/json")) {
+  const text = await res.text();
+  console.error("Non-JSON response:", text);
+  throw new Error("Server returned non-JSON response.");
+}
+const result = await res.json();
 
-
-      const contentType = res.headers.get("content-type") || "";
-
-      // If server returned HTML (like an error page), read text and throw
-      if (!contentType.includes("application/json")) {
-        const text = await res.text();
-        console.error("Non-JSON response from delete API:", text);
-        throw new Error("Server returned non-JSON response. Check server logs.");
-      }
-
-      const result = await res.json();
 
       if (!res.ok) {
         alert(result?.error || "Something went wrong.");
