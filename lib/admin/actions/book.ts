@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import {
   or,
   desc,
@@ -16,8 +17,6 @@ import { books, borrowRecords, users } from "@/database/schema";
 
 const ITEMS_PER_PAGE = 20;
 
-import { revalidatePath } from "next/cache";
-
 export async function deleteBook(id: string) {
   try {
     // First check if the book exists
@@ -28,46 +27,38 @@ export async function deleteBook(id: string) {
       .limit(1);
 
     if (!existingBook) {
-      return { 
-        success: false, 
-        error: "Book not found" 
-      };
+      return { success: false, error: "Book not found" };
     }
 
     // Check if the book has active borrow records
     const [activeBorrowRecord] = await db
       .select()
       .from(borrowRecords)
-      .where(
-        eq(borrowRecords.bookId, id)
-      )
+      .where(eq(borrowRecords.bookId, id))
       .limit(1);
 
     if (activeBorrowRecord) {
-      return { 
-        success: false, 
-        error: "Cannot delete book with active borrow records" 
+      return {
+        success: false,
+        error: "Cannot delete book with active borrow records",
       };
     }
 
     // Delete the book from the database
-    await db
-      .delete(books)
-      .where(eq(books.id, id));
+    await db.delete(books).where(eq(books.id, id));
 
-    // Revalidate the page to refresh the data
-    revalidatePath("/admin/books");
-    
-    return { 
-      success: true,
-      message: "Book deleted successfully"
-    };
+    // Revalidate the admin books page
+    try {
+      revalidatePath("/admin/books");
+    } catch (e) {
+      // ignore revalidation errors in case it's not supported in the environment
+      console.warn("revalidatePath failed:", e);
+    }
+
+    return { success: true, message: "Book deleted successfully" };
   } catch (error) {
     console.error("Error deleting book:", error);
-    return { 
-      success: false, 
-      error: "Failed to delete book. Please try again." 
-    };
+    return { success: false, error: "Failed to delete book. Please try again." };
   }
 }
 
