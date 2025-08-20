@@ -16,9 +16,6 @@ import { books, borrowRecords, users } from "@/database/schema";
 
 const ITEMS_PER_PAGE = 20;
 
-// File: /lib/admin/actions/book.ts
-"use server";
-
 import { revalidatePath } from "next/cache";
 
 export async function deleteBook(id: string) {
