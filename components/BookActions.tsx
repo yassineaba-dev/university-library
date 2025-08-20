@@ -9,17 +9,21 @@ export default function BookActions({ bookId }: { bookId: string }) {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`/api/books/${bookId}/delete`, {
-        method: "DELETE",
-      });
+      const res = await fetch(`/api/books/${bookId}/delete`, { method: "DELETE" });
 
-      if (!res.ok) {
-        const error = await res.json();
-        alert(error.error || "Failed to delete the book.");
-        return;
-      }
+let json;
+try {
+  json = await res.json();
+} catch {
+  json = {};
+}
 
-      window.location.reload();
+if (!res.ok) {
+  alert(json?.error || "Something went wrong.");
+  return;
+}
+
+window.location.reload();
     } catch (err) {
       console.error(err);
       alert("Something went wrong.");
