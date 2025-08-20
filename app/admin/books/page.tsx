@@ -25,18 +25,6 @@ const Page = async ({ searchParams }: PageProps) => {
     page,
   });
 
-  const handleDelete = async (bookId: string) => {
-  const confirmed = confirm("Are you sure you want to delete this book?");
-  if (!confirmed) return;
-
-  const result = await deleteBook(bookId);
-  if (result.success) {
-    window.location.reload(); // Refresh the page to update the list
-  } else {
-    alert("Failed to delete the book.");
-  }
-};
-
   return (
     <section className="w-full rounded-2xl bg-white p-7">
       <div className="flex flex-wrap items-center justify-between gap-2">
