@@ -9,5 +9,5 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     return NextResponse.json({ error: result.error }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true }); // ✅ Always return JSON
 }
