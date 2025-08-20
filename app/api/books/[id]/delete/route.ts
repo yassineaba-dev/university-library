@@ -1,13 +1,23 @@
-// This is a Next.js 13/14 app router API route
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { deleteBook } from "@/lib/admin/actions/book";
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  const result = await deleteBook(params.id);
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const result = await deleteBook(params.id);
 
-  if (!result.success) {
-    return NextResponse.json({ error: result.error }, { status: 500 });
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Delete book error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json({ success: true });
 }
