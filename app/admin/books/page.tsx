@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import Pagination from "@/components/Pagination";
 
 import { getBooks } from "@/lib/admin/actions/book";
-import { deleteBook } from "@/lib/admin/actions/book";
+import BookActions from "@/components/BookActions";
 
 const Page = async ({ searchParams }: PageProps) => {
   const { query, sort, page } = await searchParams;
@@ -88,28 +88,7 @@ const Page = async ({ searchParams }: PageProps) => {
                     </Button>
                   </TableCell>
                   <TableCell>
-                    <div className="flex flex-row items-center gap-3.5">
-                      <Link
-                        href={`/admin/books/${book.id}/edit`}
-                        className="relative size-5"
-                      >
-                        <Image
-                          src="/icons/admin/edit.svg"
-                          fill
-                          className="object-contain"
-                          alt="edit"
-                        />
-                      </Link>
-                      <button onClick={() => handleDelete(book.id)} className="relative size-5">
-   <Image
-                        src="/icons/admin/trash.svg"
-                        width={20}
-                        height={20}
-                        className="object-contain"
-                        alt="delete"
-                      />
-</button>
-                    </div>
+                   <BookActions bookId={book.id} />
                   </TableCell>
                 </TableRow>
               ))
