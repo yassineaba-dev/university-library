@@ -9,11 +9,13 @@ export default function BookActions({ bookId }: { bookId: string }) {
   if (!confirmed) return;
 
   try {
-    const res = await fetch(`/api/books/${bookId}/delete`, { method: "DELETE" });
+    const res = await fetch(`/api/books/${bookId}/delete`, {
+      method: "DELETE",
+    });
 
     let result;
     try {
-      result = await res.json(); // safely parse response
+      result = await res.json();
     } catch {
       result = {};
     }
@@ -23,13 +25,14 @@ export default function BookActions({ bookId }: { bookId: string }) {
       return;
     }
 
+    // Success
     window.location.reload();
   } catch (err) {
     console.error("Delete failed:", err);
     alert("Something went wrong.");
   }
 };
-
+  
   return (
     <div className="flex flex-row items-center gap-3.5">
       <Link href={`/admin/books/${bookId}/edit`} className="relative size-5">
