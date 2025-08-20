@@ -13,7 +13,6 @@ import {
 
 import { db } from "@/database/drizzle";
 import { books, borrowRecords, users } from "@/database/schema";
-import { deleteBook } from "@/lib/admin/actions/book";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -235,14 +234,4 @@ export async function getBook({ id }: { id: string }) {
   }
 }
 
-const handleDelete = async (bookId: string) => {
-  const confirmed = confirm("Are you sure you want to delete this book?");
-  if (!confirmed) return;
 
-  const result = await deleteBook(bookId);
-  if (result.success) {
-    window.location.reload(); // Refresh the page to update the list
-  } else {
-    alert("Failed to delete the book.");
-  }
-};
