@@ -1,3 +1,4 @@
+// File: /app/api/books/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { deleteBook } from "@/lib/admin/actions/book";
 
@@ -9,14 +10,20 @@ export async function DELETE(
     const result = await deleteBook(params.id);
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 500 });
+      return NextResponse.json(
+        { error: result.error }, 
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ 
+      success: true, 
+      message: result.message 
+    });
   } catch (error) {
-    console.error("Delete book error:", error);
+    console.error("Delete book API error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error" }, 
       { status: 500 }
     );
   }
