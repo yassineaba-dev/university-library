@@ -2,26 +2,29 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function BookActions({ bookId }: { bookId: string }) {
+  const router = useRouter();
+
   const handleDelete = async () => {
     const confirmed = confirm("Are you sure you want to delete this book?");
     if (!confirmed) return;
 
     try {
-      // Changed from `/api/books/${bookId}/delete` to `/api/books/${bookId}`
       const res = await fetch(`/api/books/${bookId}`, {
         method: "DELETE",
       });
 
+      const result = await res.json();
+
       if (!res.ok) {
-        const error = await res.json().catch(() => ({}));
-        alert(error?.error || "Something went wrong.");
+        alert(result?.error || "Something went wrong.");
         return;
       }
 
-      // Success
-      window.location.reload();
+      // Success - refresh the page
+      router.refresh();
     } catch (err) {
       console.error("Delete failed:", err);
       alert("Something went wrong.");
