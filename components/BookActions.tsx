@@ -9,19 +9,14 @@ export default function BookActions({ bookId }: { bookId: string }) {
     if (!confirmed) return;
 
     try {
-      const res = await fetch(`/api/books/${bookId}/delete`, {
+      // Changed from `/api/books/${bookId}/delete` to `/api/books/${bookId}`
+      const res = await fetch(`/api/books/${bookId}`, {
         method: "DELETE",
       });
 
-      let result;
-      try {
-        result = await res.json();
-      } catch {
-        result = {};
-      }
-
       if (!res.ok) {
-        alert(result?.error || "Something went wrong.");
+        const error = await res.json().catch(() => ({}));
+        alert(error?.error || "Something went wrong.");
         return;
       }
 
