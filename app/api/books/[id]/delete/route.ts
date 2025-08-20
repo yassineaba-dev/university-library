@@ -1,6 +1,6 @@
-// app/api/books/[id]/delete/route.ts
-import { deleteBook } from "@/lib/admin/actions/book";
+// This is a Next.js 13/14 app router API route
 import { NextResponse } from "next/server";
+import { deleteBook } from "@/lib/admin/actions/book";
 
 export async function DELETE(_: Request, { params }: { params: { id: string } }) {
   const result = await deleteBook(params.id);
@@ -9,5 +9,5 @@ export async function DELETE(_: Request, { params }: { params: { id: string } })
     return NextResponse.json({ error: result.error }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true }); // ✅ This must exist
+  return NextResponse.json({ success: true });
 }
