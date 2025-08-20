@@ -166,3 +166,18 @@ export async function searchBooks({
     };
   }
 }
+
+export async function deleteBook(bookId: string) {
+  try {
+    await db.delete(books).where(eq(books.id, bookId));
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    return {
+      success: false,
+      error: "Error deleting book",
+    };
+  }
+}
