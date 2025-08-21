@@ -12,50 +12,40 @@ interface BookActionsProps {
 export default function BookActions({ bookId, onDelete }: BookActionsProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = async () => {
-    const confirmed = confirm(
-      "Are you sure you want to delete this book? This action cannot be undone."
-    );
-    if (!confirmed) return;
+ // In your BookActions component
+const handleDelete = async () => {
+  const confirmed = confirm(
+    "Are you sure you want to delete this book? This action cannot be undone."
+  );
+  if (!confirmed) return;
 
-    setIsDeleting(true);
+  setIsDeleting(true);
 
-    try {
-     const res = await fetch(`/api/books/${bookId}`, {
-  method: "DELETE",
-});
-      const ct = res.headers.get("content-type") || "";
-if (!ct.includes("application/json")) {
-  const text = await res.text();
-  console.error("Non-JSON response:", text);
-  throw new Error("Server returned non-JSON response.");
-}
-const result = await res.json();
+  try {
+    const res = await fetch(`/api/books/${bookId}`, {
+      method: "DELETE",
+    });
 
-
-      if (!res.ok) {
-        alert(result?.error || "Something went wrong.");
-        return;
-      }
-
-      // If parent passed onDelete, call it; otherwise fallback to reload
-      if (typeof onDelete === "function") {
-        onDelete();
-      } else {
-        // fallback — simple and reliable
-        window.location.reload();
-      }
-
-      // optional UX
-      // alert("Book deleted successfully!");
-    } catch (err) {
-      console.error("Delete failed:", err);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setIsDeleting(false);
+    if (!res.ok) {
+      const result = await res.json();
+      alert(result?.error || "Something went wrong.");
+      return;
     }
-  };
 
+    // If parent passed onDelete, call it; otherwise fallback to reload
+    if (typeof onDelete === "function") {
+      onDelete();
+    } else {
+      window.location.reload();
+    }
+  } catch (err) {
+    console.error("Delete failed:", err);
+    alert("Something went wrong. Please try again.");
+  } finally {
+    setIsDeleting(false);
+  }
+};
+  
   return (
     <div className="flex items-center gap-3">
       <Link
