@@ -63,7 +63,7 @@ const handleDelete = async () => {
     <div className="flex items-center gap-3">
       <Link
         href={`/admin/books/${bookId}/edit`}
-        className="p-1.5 rounded-md hover:bg-gray-100 transition-colors"
+        className="rounded-md hover:bg-gray-100 transition-colors"
         title="Edit book"
       >
         <Image src="/icons/admin/edit.svg" width={22} height={22} alt="Edit" className="w-4 h-4" />
@@ -71,7 +71,7 @@ const handleDelete = async () => {
       <button
         onClick={handleDelete}
         disabled={isDeleting}
-        className="p-1.5 rounded-md hover:bg-red-50 transition-colors disabled:opacity-50"
+        className="rounded-md hover:bg-red-50 transition-colors disabled:opacity-50"
         title="Delete book"
       >
         {isDeleting ? (
