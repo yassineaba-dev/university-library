@@ -22,15 +22,28 @@ const handleDelete = async () => {
   setIsDeleting(true);
 
   try {
+    // Use the correct URL format
     const res = await fetch(`/api/books/${bookId}`, {
       method: "DELETE",
     });
 
+    // Check if response is OK before trying to parse JSON
     if (!res.ok) {
-      const result = await res.json();
-      alert(result?.error || "Something went wrong.");
+      // Try to get error message from response
+      let errorMsg = "Something went wrong.";
+      try {
+        const errorData = await res.json();
+        errorMsg = errorData.error || errorMsg;
+      } catch (e) {
+        // If response is not JSON, use status text
+        errorMsg = res.statusText || errorMsg;
+      }
+      alert(errorMsg);
       return;
     }
+
+    // Parse response as JSON
+    const result = await res.json();
 
     // If parent passed onDelete, call it; otherwise fallback to reload
     if (typeof onDelete === "function") {
