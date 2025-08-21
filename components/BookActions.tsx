@@ -66,7 +66,7 @@ const handleDelete = async () => {
         className="p-1.5 rounded-md hover:bg-gray-100 transition-colors"
         title="Edit book"
       >
-        <Image src="/icons/admin/edit.svg" width={18} height={18} alt="Edit" />
+        <Image src="/icons/admin/edit.svg" width={18} height={18} alt="Edit" className="w-4 h-4" />
       </Link>
       <button
         onClick={handleDelete}
@@ -77,7 +77,7 @@ const handleDelete = async () => {
         {isDeleting ? (
           <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
         ) : (
-          <Image src="/icons/admin/trash.svg" width={18} height={18} alt="Delete" />
+          <Image src="/icons/admin/trash.svg" width={18} height={18} alt="Delete" className="w-4 h-4" />
         )}
       </button>
     </div>
