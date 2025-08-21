@@ -16,7 +16,6 @@ import Pagination from "@/components/Pagination";
 import { getUsers } from "@/lib/admin/actions/user";
 import Menu from "@/components/admin/Menu";
 import { userRoles } from "@/constants";
-import UserActions from "@/components/UserActions"; // Import the new component
 
 const Page = async ({ searchParams }: PageProps) => {
   const { query, sort, page } = await searchParams;
@@ -90,13 +89,19 @@ const Page = async ({ searchParams }: PageProps) => {
                     {totalBorrowedBooks}
                   </TableCell>
                   <TableCell className="flex justify-center">
-                    <UserActions userId={user.id} />
+                    <Image
+                      src="/icons/admin/trash.svg"
+                      width={20}
+                      height={20}
+                      className="object-contain"
+                      alt="delete"
+                    />
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="text-center pt-10">
+                <TableCell colSpan={6} className="text-center pt-10">
                   No records found
                 </TableCell>
               </TableRow>
