@@ -1,110 +1,60 @@
 "use client";
 
 import { useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
-
-interface MenuItem {
-  value: string;
-  label: string;
-  bgColor?: string;
-  textColor?: string;
-}
 
 interface MenuProps {
   label: string;
   initialValue: string;
-  items: MenuItem[];
+  items: { value: string; label: string }[];
   onChange?: (value: string) => void;
-  showLabel?: boolean;
-  variant?: "default" | "badge";
 }
 
-export default function Menu({ 
-  label, 
-  initialValue, 
-  items, 
-  onChange, 
-  showLabel = true,
-  variant = "default" 
-}: MenuProps) {
+export default function Menu({ label, initialValue, items, onChange }: MenuProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(initialValue);
 
   const handleSelect = (value: string) => {
     setSelectedValue(value);
+    setIsOpen(false);
     if (onChange) {
       onChange(value);
     }
   };
 
-  const selectedItem = items.find(item => item.value === selectedValue) || items[0];
-
-  const getItemStyle = (item: MenuItem) => {
-    if (variant === "badge" && item.bgColor && item.textColor) {
-      return cn(
-        "capitalize w-fit text-center text-sm font-medium px-3 py-1 rounded-full",
-        item.bgColor,
-        item.textColor
-      );
-    }
-    
-    return "text-sm";
-  };
-
-  const triggerContent = variant === "badge" ? (
-    <span className={getItemStyle(selectedItem)}>
-      {selectedItem.label}
-    </span>
-  ) : (
-    <div className="flex items-center justify-between gap-2 min-w-[120px]">
-      <span>{selectedItem.label}</span>
-      <Image
-        src="/icons/chevron-down.svg"
-        width={16}
-        height={16}
-        alt="dropdown"
-      />
-    </div>
-  );
-
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        className={cn(
-          variant === "default" && 
-          "inline-flex justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none",
-          "outline-none ring-0 focus:ring-0"
-        )}
+    <div className="relative inline-block text-left">
+      <button
+        type="button"
+        className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+        onClick={() => setIsOpen(!isOpen)}
       >
-        {triggerContent}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
-        {showLabel && (
-          <>
-            <DropdownMenuLabel>{label}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-          </>
-        )}
-        {items.map((item) => (
-          <DropdownMenuItem
-            key={item.value}
-            onClick={() => handleSelect(item.value)}
-            className="cursor-pointer"
-          >
-            <span className={getItemStyle(item)}>
-              {item.label}
-            </span>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+        {items.find(item => item.value === selectedValue)?.label || label}
+        <Image
+          src="/icons/chevron-down.svg"
+          width={16}
+          height={16}
+          className="ml-2"
+          alt="dropdown"
+        />
+      </button>
+
+      {isOpen && (
+        <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+          <div className="py-1" role="menu" aria-orientation="vertical">
+            {items.map((item) => (
+              <button
+                key={item.value}
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                role="menuitem"
+                onClick={() => handleSelect(item.value)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
